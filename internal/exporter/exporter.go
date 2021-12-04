@@ -117,13 +117,21 @@ func (e *Exporter) speedtest(testUUID string, ch chan<- prometheus.Metric) bool 
 			log.Error(err)
 			return false
 		}
-
+		// Server ID does not exist in the server list and server_fallback is not set = exit
 		if servers[0].ID != fmt.Sprintf("%d", e.serverID) && !e.serverFallback {
 			log.Errorf("could not find your choosen server ID %d in the list of avaiable servers, server_fallback is not set so failing this test", e.serverID)
 			return false
 		}
-
-		server = servers[0]
+		// Server ID does not exist in the server list and server_fallback is set = use closest server from the server list
+                if servers[0].ID != fmt.Sprintf("%d", e.serverID) && e.serverFallback {
+                        server = serverList.Servers[0]
+                        fmt.Println("Could not find your chosen server ID "+fmt.Sprintf("%d", e.serverID)+" in the list of avaiable servers, server_fallback IS SET so using server ID: "+server.ID+" "$
+                }
+		// Server ID exists in the server list (regardless server_fallback)
+                if servers[0].ID == fmt.Sprintf("%d", e.serverID){
+                        server = servers[0]
+                        fmt.Println("Found your chosen server ID "+fmt.Sprintf("%d", e.serverID)+" using: " +servers[0].ID+" "+servers[0].Sponsor)
+                }
 	}
 
 	ok := pingTest(testUUID, user, server, ch)
