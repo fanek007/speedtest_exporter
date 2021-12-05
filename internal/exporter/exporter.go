@@ -125,7 +125,7 @@ func (e *Exporter) speedtest(testUUID string, ch chan<- prometheus.Metric) bool 
 		// Server ID does not exist in the server list and server_fallback is set = use closest server from the server list
                 if servers[0].ID != fmt.Sprintf("%d", e.serverID) && e.serverFallback {
                         server = serverList.Servers[0]
-                        fmt.Println("Could not find your chosen server ID "+fmt.Sprintf("%d", e.serverID)+" in the list of avaiable servers, server_fallback IS SET so using server ID: "+server.ID+" "$
+                        fmt.Println("Could not find your chosen server ID "+fmt.Sprintf("%d", e.serverID)+" in the list of avaiable servers, server_fallback IS SET so using server ID: "+server.ID+" "+servers[0].Sponsor)
                 }
 		// Server ID exists in the server list (regardless server_fallback)
                 if servers[0].ID == fmt.Sprintf("%d", e.serverID){
